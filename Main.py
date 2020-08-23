@@ -1,8 +1,6 @@
 
 from app import app as Backend
-from app import TradingView
 if __name__ ==  "__main__":
-    TradingView()
     Backend.run( host="0.0.0.0", port="5000",debug=True)
     Backend.config['JSON_AS_ASCII'] = False
 
