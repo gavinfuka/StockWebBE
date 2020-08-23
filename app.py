@@ -4,10 +4,10 @@ import os
 import json
 
 #self defined Moodules
-from .Modules import ChromeBot,GUtils
-from .Modules.Screener import Screener
-from .Modules.GUtils.FileUtils import FileUtils 
-from .Modules.GUtils.GSheet import GSheet
+from Modules import ChromeBot
+from Modules.Screener import Screener
+from GUtils.FileUtils import FileUtils 
+from GUtils.GSheet import GSheet
 from selenium.webdriver.common.keys import Keys
 
 from flask import Flask, render_template,url_for,jsonify
@@ -18,26 +18,26 @@ app = Flask('Backend')
 @app.route('/graph')
 def TradingView():
     List = GSheet('1EIQacULCn6vC7dc4q9KVX71E2eB-Obasfq6N4mVcyQo').Get()
-    TradingView = ChromeBot('https://tw.tradingview.com/chart')
-    TradingView.Symbol.Click('/html/body/div[2]/div[2]/div/div/div[1]/div/div/div/div/div/div[13]/div/div/div[1]')
-    TradingView.Symbol.Click('/html/body/div[8]/div/div[2]/div/div/div/div/div/div[1]/div[2]/span[2]')
+    TraVwBot = ChromeBot('https://tw.tradingview.com/chart')
+    TraVwBot.BaseActions.Click('/html/body/div[2]/div[2]/div/div/div[1]/div/div/div/div/div/div[13]/div/div/div[1]')
+    TraVwBot.BaseActions.Click('/html/body/div[8]/div/div[2]/div/div/div/div/div/div[1]/div[2]/span[2]')
 
     for stock in List['Stock']:
         print(stock)
-        TradingView.Symbol.Wait('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input')
-        TradingView.Symbol.Click('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input')
-        TradingView.Symbol.Send('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input', stock.replace('.HK',''))
-        TradingView.Symbol.Select('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input').send_keys(Keys.ENTER)
+        TraVwBot.BaseActions.Wait('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input')
+        TraVwBot.BaseActions.Click('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input')
+        TraVwBot.BaseActions.Send('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input', stock.replace('.HK',''))
+        TraVwBot.BaseActions.Select('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input').send_keys(Keys.ENTER)
         input('Press enter for next')
-    TradingView.Quit()
+    TraVwBot.Quit()
 
 @app.route('/analyse')
 def RunAnalysis():
     try:
         #Investing.com Filter
-        Investing= ChromeBot()
-        res = Investing.Symbol.Extract()
-        Investing.Quit()
+        bot= ChromeBot()
+        res = bot.InvestCom.Extract()
+        bot.Quit()
 
         GSheet('1EIQacULCn6vC7dc4q9KVX71E2eB-Obasfq6N4mVcyQo').Save(res,sheet='Investing.com') 
 

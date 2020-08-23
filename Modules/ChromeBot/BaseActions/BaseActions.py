@@ -4,10 +4,10 @@ import os
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from ..GUtils.CLog import CLog
+from ..CLog import CLog
 
 
-class BaseAction():
+class BaseActions():
     def __init__(self,driver):
         self.image = os.getcwd()+"/image.png"
         self.driver = driver

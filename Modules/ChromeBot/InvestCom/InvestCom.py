@@ -1,11 +1,11 @@
-from ..BaseActions import BaseAction
-from ..GUtils.CLog import CLog
+from ..BaseActions import BaseActions
+from ..CLog import CLog
 
 from time import sleep
 import os 
 import pandas as pd
 
-class Symbol(BaseAction):
+class InvestCom(BaseActions):
     def __init__(self,driver):
         super().__init__(self)
         self.driver = driver

@@ -11,10 +11,10 @@ import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 
-from .GUtils.GSheet import GSheet
-from .GUtils.CLog import CLog
+from GUtils.GSheet import GSheet
+from GUtils.CLog import CLog
 
-from .config import config
+from ..config import config
 
 yf.pdr_override()
 

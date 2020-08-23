@@ -1,7 +1,8 @@
-from ._example import _example
-from .Symbol import Symbol
+# from ._example import _example
+from .InvestCom import InvestCom
+from .BaseActions import BaseActions
 #config
-from .config import config
+from ..config import config
 
 from selenium import webdriver
 
@@ -31,7 +32,8 @@ class ChromeBot:
 
         ##self.Modules
         # self._example = _example(self.driver)
-        self.Symbol = Symbol(self.driver)
+        self.BaseActions = BaseActions(self.driver)
+        self.InvestCom = InvestCom(self.driver)
 
 
 
