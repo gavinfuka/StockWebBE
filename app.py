@@ -6,8 +6,8 @@ import json
 #self defined Moodules
 from Modules import ChromeBot
 from Modules.Screener import Screener
-from GUtils.FileUtils import FileUtils 
 from GUtils.GSheet import GSheet
+from GUtils.Database.CouchDB import CouchDB
 from selenium.webdriver.common.keys import Keys
 
 from flask import Flask, render_template,url_for,jsonify
@@ -15,6 +15,17 @@ from flask import Flask, render_template,url_for,jsonify
 app = Flask('Backend')
 
 '''Back End'''
+@app.route('/syncDB')
+def SyncDatabase():
+    Result = GSheet('1EIQacULCn6vC7dc4q9KVX71E2eB-Obasfq6N4mVcyQo').Get()
+    Result["_id"] = "2020-08-20"
+    CouchDB(HTTP="http", USERNAME = "admin", PASSWORD="password" , URL='localhost:5984').Insert(dbName="jlaw",doc =Result)
+    print('OK')
+
+
+
+
+
 @app.route('/graph')
 def TradingView():
     List = GSheet('1EIQacULCn6vC7dc4q9KVX71E2eB-Obasfq6N4mVcyQo').Get()
