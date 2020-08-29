@@ -1,6 +1,4 @@
 from pandas_datareader import data as pdr
-from yahoo_fin import stock_info as si
-from pandas import ExcelWriter
 import yfinance as yf
 import pandas as pd
 import requests
@@ -18,13 +16,6 @@ from ..config import config
 
 yf.pdr_override()
 
-# stocklist = []
-# for filename in os.listdir('./csv'):
-#     if '.csv' in filename:
-#         with open('./csv/'+filename,encoding='utf-8') as f:
-#             watchlist = pd.read_csv(f).to_dict()
-#             for key,value in watchlist['代號'].items():
-#                 stocklist.append(str(value).zfill(4) + '.HK')
 
 class Screener:
     def __init__(self):
