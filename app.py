@@ -12,17 +12,15 @@ from selenium.webdriver.common.keys import Keys
 
 from flask import Flask, render_template,url_for,jsonify
 
+from _config import config
 app = Flask('Backend')
 
 '''Back End'''
-@app.route('/syncDB')
-def SyncDatabase():
-    Result = GSheet('1EIQacULCn6vC7dc4q9KVX71E2eB-Obasfq6N4mVcyQo').Get()
-    Result["_id"] = "2020-08-20"
-    CouchDB(HTTP="http", USERNAME = "admin", PASSWORD="password" , URL='localhost:5984').Insert(dbName="jlaw",doc =Result)
-    print('OK')
 
-
+@app.route('/GetResult/<algorithm>')
+def GetResult(algorithm):
+    res = CouchDB(HTTP="http", USERNAME = "Fexpert", PASSWORD="Fexpert" , URL=config["CouchDB"]["URL"]).getDocQ(dbName=algorithm.lower(), _id="2020-08-20")
+    return jsonify(res)
 
 
 
