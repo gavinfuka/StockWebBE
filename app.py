@@ -6,7 +6,7 @@ import json
 #self defined Moodules
 from Modules import ChromeBot
 from Modules.Screener import Screener
-from GUtils.GSheet import GSheet
+from GUtils.GSheet.GSheet import GSheet
 from GUtils.Database.CouchDB import CouchDB
 from selenium.webdriver.common.keys import Keys
 

@@ -9,9 +9,6 @@ import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 
-from GUtils.GSheet import GSheet
-from GUtils.CLog import CLog
-
 from ..config import config
 
 yf.pdr_override()
@@ -38,7 +35,7 @@ class Screener:
             RS_Rating = ThreeMthRS + SixMthRS + NineMthRS + TwelveMthRS
 
         except:
-            CLog('[X] RS_Rating Not caculated:' + str(len(df)))
+            print('[X] RS_Rating Not caculated:' + str(len(df)))
             RS_Rating = 0
 
         return RS_Rating
@@ -137,7 +134,3 @@ class Screener:
         exportList = exportList.sort_values(by=['RS_Rating'],ascending=False)
         return exportList.to_dict('list')
 
-# res = GSheet('1EIQacULCn6vC7dc4q9KVX71E2eB-Obasfq6N4mVcyQo').Get(sheet='Investing.com')
-# Result = Screener().Analyze(res)
-# Result = Screener().Analyze({'SymbolList':['1755'],'NameList':[''],'SectorList':['']})
-# GSheet('1EIQacULCn6vC7dc4q9KVX71E2eB-Obasfq6N4mVcyQo').Save(Result)
