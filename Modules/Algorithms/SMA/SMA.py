@@ -9,18 +9,18 @@ import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 
-from ..config import config
+from ...config import config
 
 yf.pdr_override()
 
 
-class Screener:
+class SMA:
     def __init__(self):
         pass
 
     @staticmethod
     def PadZero(List):
-        return [str(item).zfill(4) + '.HK' for item in List]
+        return str(List).zfill(4) + '.HK' 
 
 
     @staticmethod
@@ -114,11 +114,15 @@ class Screener:
 
     def Analyze(self,Data):
         exportList = pd.DataFrame(columns=['Stock', "Name", "RS_Rating", "50 Day MA", "150 Day Ma", "200 Day MA", "52 Week Low", "52 week High"])
-        Data["SymbolList"] = self.PadZero(Data["SymbolList"])
+        
 
-        for name,symbol in zip(Data['NameList'],Data['SymbolList']):
+        for obj in Data["Symbols"]:
+            name = obj['Name']['TC']
+            symbol = self.PadZero(obj['Symbol'])
+
             if symbol in config['Exceptions']:
                 continue
+
             #yahoo finance API
             start_date = datetime.datetime.now() - datetime.timedelta(days=365)
             end_date = datetime.date.today()

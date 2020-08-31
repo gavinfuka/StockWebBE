@@ -1,2 +1,3 @@
-from .ChromeBot import ChromeBot
+from .Database import *
+from .Algorithms import *
 

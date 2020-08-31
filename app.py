@@ -1,14 +1,15 @@
 from time import sleep
 import pandas as pd 
 import os
-import json
+import jsonfrom datetime import date
 
 #self defined Moodules
-from Modules import ChromeBot
-from Modules.Screener import Screener
-from GUtils.GSheet.GSheet import GSheet
-from GUtils.Database.CouchDB import CouchDB
-from selenium.webdriver.common.keys import Keys
+
+#Main Algorithms
+from Modules.Algorithms import SMA
+
+from Modules.Database.CouchDB import CouchDB
+
 
 from flask import Flask, render_template,url_for,jsonify
 
@@ -23,44 +24,19 @@ def GetResult(algorithm):
     return jsonify(res)
 
 
-
-@app.route('/graph')
-def TradingView():
-    List = GSheet('1EIQacULCn6vC7dc4q9KVX71E2eB-Obasfq6N4mVcyQo').Get()
-    TraVwBot = ChromeBot('https://tw.tradingview.com/chart')
-    TraVwBot.BaseActions.Click('/html/body/div[2]/div[2]/div/div/div[1]/div/div/div/div/div/div[13]/div/div/div[1]')
-    TraVwBot.BaseActions.Click('/html/body/div[8]/div/div[2]/div/div/div/div/div/div[1]/div[2]/span[2]')
-
-    for stock in List['Stock']:
-        print(stock)
-        TraVwBot.BaseActions.Wait('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input')
-        TraVwBot.BaseActions.Click('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input')
-        TraVwBot.BaseActions.Send('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input', stock.replace('.HK',''))
-        TraVwBot.BaseActions.Select('/html/body/div[2]/div[2]/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div/input').send_keys(Keys.ENTER)
-        input('Press enter for next')
-    TraVwBot.Quit()
-
-@app.route('/analyse')
-def RunAnalysis():
+@app.route('/Analyse/<algorithm>')
+def RunAnalysis(algorithm):
     try:
-        #Investing.com Filter
-        bot= ChromeBot()
-        res = bot.InvestCom.Extract()
-        bot.Quit()
+        #Get List of symbols to anaylze
+        res = CouchDB(HTTP="http", USERNAME = "Fexpert", PASSWORD="Fexpert" , URL=config["CouchDB"]["URL"]).getDocQ(dbName='symbol', _id="2020-08-31")
 
-        GSheet('1EIQacULCn6vC7dc4q9KVX71E2eB-Obasfq6N4mVcyQo').Save(res,sheet='Investing.com') 
+        Result = SMA().Analyze(res)
 
-        Result = Screener().Analyze(res)
-
-        GSheet('1EIQacULCn6vC7dc4q9KVX71E2eB-Obasfq6N4mVcyQo').Save(Result)
         return Result 
         
     except Exception as e:
         print(e)
 
-@app.route('/result')
-def Result():
-    res = GSheet('1EIQacULCn6vC7dc4q9KVX71E2eB-Obasfq6N4mVcyQo').Get()
-    return jsonify(res)
+
 
 
