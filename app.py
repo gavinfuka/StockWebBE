@@ -1,7 +1,8 @@
 from time import sleep
 import pandas as pd 
 import os
-import jsonfrom datetime import date
+import json
+from datetime import date
 
 #self defined Moodules
 
