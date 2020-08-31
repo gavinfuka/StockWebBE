@@ -28,7 +28,7 @@ def GetResult(algorithm):
 def RunAnalysis(algorithm):
     try:
         #Get List of symbols to anaylze
-        res = CouchDB(HTTP="http", USERNAME = "Fexpert", PASSWORD="Fexpert" , URL=config["CouchDB"]["URL"]).getDocQ(dbName='symbol', _id="2020-08-31")
+        res = CouchDB(HTTP="http", USERNAME = "Fexpert", PASSWORD="Fexpert" , URL=config["CouchDB"]["URL"]).getDocQ(dbName='scnr_res', _id="2020-08-31")
 
         Result = SMA().Analyze(res)
 
