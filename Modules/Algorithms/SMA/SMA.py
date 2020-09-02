@@ -1,22 +1,19 @@
-from pandas_datareader import data as pdr
-import yfinance as yf
+
 import pandas as pd
 import requests
-import datetime
 import time
 import os
 import matplotlib.pyplot as plt
-
 from tqdm import tqdm
 
-from ...config import config
+from .YFinance import YFinance
+from _config import config
 
-yf.pdr_override()
 
-
+from ...Database import CouchDB
 class SMA:
     def __init__(self):
-        pass
+        self.CouchDB = CouchDB(config=config["CouchDB"])
 
     @staticmethod
     def PadZero(List):
@@ -123,10 +120,13 @@ class SMA:
             if symbol in config['Exceptions']:
                 continue
 
-            #yahoo finance API
-            start_date = datetime.datetime.now() - datetime.timedelta(days=365)
-            end_date = datetime.date.today()
-            yahoo_df = pdr.get_data_yahoo(symbol, start=start_date, end=end_date)
+            yahoo_df = YFinance.Fetch1Year(symbol)
+
+            yahoo_df_clone = yahoo_df
+            yahoo_df_clone.index = yahoo_df_clone.index.astype(str)
+
+            self.CouchDB.Update(dbName='yfinance', doc=yahoo_df_clone.to_dict(), _id=symbol)
+
 
             if len(yahoo_df) <= 0:
                 continue

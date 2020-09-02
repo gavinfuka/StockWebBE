@@ -21,7 +21,7 @@ app = Flask('Backend')
 
 @app.route('/GetResult/<algorithm>')
 def GetResult(algorithm):
-    res = CouchDB(HTTP="http", USERNAME = "Fexpert", PASSWORD="Fexpert" , URL=config["CouchDB"]["URL"]).getDocQ(dbName=algorithm.lower(), _id="2020-08-20")
+    res = CouchDB(config =config["CouchDB"]).getDocQ(dbName=algorithm.lower(), _id="2020-08-20")
     return jsonify(res)
 
 
@@ -29,7 +29,7 @@ def GetResult(algorithm):
 def RunAnalysis(algorithm):
     try:
         #Get List of symbols to anaylze
-        res = CouchDB(HTTP="http", USERNAME = "Fexpert", PASSWORD="Fexpert" , URL=config["CouchDB"]["URL"]).getDocQ(dbName='scnr_res', _id="2020-08-31")
+        res = CouchDB( config=config["CouchDB"]).getDocQ(dbName='scnr_res', _id="2020-08-31")
 
         Result = SMA().Analyze(res)
 
