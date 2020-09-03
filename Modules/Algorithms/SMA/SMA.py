@@ -120,12 +120,13 @@ class SMA:
             if symbol in config['Exceptions']:
                 continue
 
-            yahoo_df = YFinance.Fetch1Year(symbol)
+            # yahoo_df = YFinance.Fetch1Year(symbol)
 
-            yahoo_df_clone = yahoo_df
-            yahoo_df_clone.index = yahoo_df_clone.index.astype(str)
+            # yahoo_df_clone = yahoo_df
+            # yahoo_df_clone.index = yahoo_df_clone.index.astype(str)
 
-            self.CouchDB.Update(dbName='yfinance', doc=yahoo_df_clone.to_dict(), _id=symbol)
+            yahoo_dict = self.CouchDB.getDocQ(dbName='yfinance',  _id=symbol)
+            yahoo_df = pd.DataFrame(yahoo_dict)
 
 
             if len(yahoo_df) <= 0:
