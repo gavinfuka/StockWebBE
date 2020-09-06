@@ -19,19 +19,20 @@ app = Flask('Backend')
 
 '''Back End'''
 
-@app.route('/GetResult/<algorithm>')
-def GetResult(algorithm):
-    res = CouchDB(config =config["CouchDB"]).getDocQ(dbName=algorithm.lower(), _id="2020-08-20")
+@app.route('/Result/<algorithm>/<date>')
+def GetResult(algorithm,date):
+    res = CouchDB(config =config["CouchDB"]).getDocQ(dbName=algorithm.lower(), _id=date)
     return jsonify(res)
 
 
-@app.route('/Analyse/<algorithm>')
-def RunAnalysis(algorithm):
+@app.route('/Analyse/<algorithm>/<date>')
+def RunAnalysis(algorithm,date):
     try:
         #Get List of symbols to anaylze
-        res = CouchDB( config=config["CouchDB"]).getDocQ(dbName='scnr_res', _id="2020-08-31")
+        res = CouchDB( config=config["CouchDB"]).getDocQ(dbName='scnr_res', _id=date)
 
         Result = SMA().Analyze(res)
+        CouchDB( config=config["CouchDB"]).Insert(dbName='sma',doc=Result,_id=date)
 
         return Result 
         
