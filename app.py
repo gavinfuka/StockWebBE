@@ -13,9 +13,13 @@ from Modules.Database.CouchDB import CouchDB
 
 
 from flask import Flask, render_template,url_for,jsonify
+from flask_cors import CORS
+
 
 from _config import config
 app = Flask('Backend')
+CORS(app)
+
 
 '''Back End'''
 
