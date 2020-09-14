@@ -24,24 +24,36 @@ CORS(app)
 '''Back End'''
 
 @app.route('/Result/<algorithm>/<date>')
-def GetResult(algorithm,date):
+def GetResultWithDate(algorithm,date):
     res = CouchDB(config =config["CouchDB"]).getDocQ(dbName=algorithm.lower(), _id=date)
+    return jsonify(res)
+
+@app.route('/Result/<algorithm>')
+def GetResult(algorithm):
+    sma_conf = CouchDB( config=config["CouchDB"]).getDocQ(dbName='config', _id='sma')
+    res = CouchDB(config =config["CouchDB"]).getDocQ(dbName=algorithm.lower(), _id=sma_conf['LastUpdate'])
     return jsonify(res)
 
 
 @app.route('/Analyse/<algorithm>/<date>')
-def RunAnalysis(algorithm,date):
+def Analyse(algorithm,date):
     try:
         #Get List of symbols to anaylze
-        res = CouchDB( config=config["CouchDB"]).getDocQ(dbName='scnr_res', _id=date)
+        scnr_conf = CouchDB( config=config["CouchDB"]).getDocQ(dbName='config', _id='scnr_res')
+        scnr_res = CouchDB( config=config["CouchDB"]).getDocQ(dbName='scnr_res', _id=scnr_conf['LastUpdate'])
 
-        Result = SMA().Analyze(res)
+        Result = SMA().Analyze(scnr_res)
         CouchDB( config=config["CouchDB"]).Insert(dbName='sma',doc=Result,_id=date)
+        doc = {
+            "LastUpdate": date
+        }
+        CouchDB( config=config["CouchDB"]).Update(dbName='config',doc=doc,_id=date)
 
         return Result 
         
     except Exception as e:
         print(e)
+        return  e
 
 
 

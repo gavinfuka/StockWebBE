@@ -38,7 +38,14 @@ class CouchDB:
 
 
     def getDocQ(self,dbName,_id):
-        return self.Connect(dbName)[_id]
+        try:
+            res = self.Connect(dbName)[_id]
+            return res
+        except Exception as e:
+            errMsg = '[x]' + str(e)
+            print(errMsg)
+
+         
 
 
     def Update(self,dbName,doc, _id):
