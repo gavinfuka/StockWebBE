@@ -6,7 +6,6 @@ import os
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 
-from .YFinance import YFinance
 from _config import config
 
 
