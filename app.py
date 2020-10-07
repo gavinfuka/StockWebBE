@@ -36,7 +36,7 @@ def GetResult(algorithm):
 
 
 @app.route('/Analyse/<algorithm>/<date>')
-def Analyse(algorithm,date):
+def AnalyseWithDate(algorithm,date):
     try:
         #Get List of symbols to anaylze
         scnr_conf = CouchDB( config=config["CouchDB"]).getDocQ(dbName='config', _id='scnr_res')
@@ -47,14 +47,35 @@ def Analyse(algorithm,date):
         doc = {
             "LastUpdate": date
         }
-        CouchDB( config=config["CouchDB"]).Update(dbName='config',doc=doc,_id=date)
+        CouchDB( config=config["CouchDB"]).Update(dbName='config',doc=doc,_id='sma')
 
-        return Result 
+        return jsonify(Result) 
         
     except Exception as e:
         print(e)
         return  e
 
 
+@app.route('/Analyse/<algorithm>')
+def Analyse(algorithm):
+    try:
+        dbDoc = CouchDB( config=config["CouchDB"]).getDocQ(dbName='config', _id='yFinance')
+        date = dbDoc['LastUpdate']
+        #Get List of symbols to anaylze
+        scnr_conf = CouchDB( config=config["CouchDB"]).getDocQ(dbName='config', _id='scnr_res')
+        scnr_res = CouchDB( config=config["CouchDB"]).getDocQ(dbName='scnr_res', _id=scnr_conf['LastUpdate'])
+        scnr_res = dict(scnr_res)
 
+        Result = SMA().Analyze(scnr_res)
+        CouchDB( config=config["CouchDB"]).Update(dbName='sma',doc=Result,_id=date)
+        doc = {
+            "LastUpdate": date
+        }
+        CouchDB( config=config["CouchDB"]).Update(dbName='config',doc=doc,_id='sma')
+
+        return jsonify(Result) 
+        
+    except Exception as e:
+        err = {"error":e}
+        return  jsonify(err)
 

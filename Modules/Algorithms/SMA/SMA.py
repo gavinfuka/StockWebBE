@@ -126,7 +126,7 @@ class SMA:
 
             yahoo_dict = self.CouchDB.getDocQ(dbName='yfinance',  _id=symbol)
             yahoo_df = pd.DataFrame(yahoo_dict)
-
+            yahoo_df = yahoo_df.sort_index()
 
             if len(yahoo_df) <= 0:
                 continue
